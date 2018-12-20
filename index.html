@@ -47,7 +47,24 @@
       <input type="number" id="total" name="total" min="0" step="0.1">
       <label for="total">Weight Lifted</label>
 
-      <input type="button" value="Calculate">
+      <input type="button" value="Calculate" onclick="window.alert(cumulative_normal(1.0, 0.0, 1.0))">
     </div>
+
+    <script>
+      // https://en.wikipedia.org/wiki/Error_function#Polynomial
+      // Agrees with the Rust implementation to about 6 decimal places.
+      function erf(x) {
+        var t = 1.0/(1.0+Math.abs(x)/2.0);
+        var t2=t*t,t3=t2*t,t4=t3*t,t5=t4*t,t6=t5*t,t7=t6*t,t8=t7*t,t9=t8*t;
+        var tau = t * Math.exp(-x*x - 1.26551223 + 1.00002368*t + 0.37409196*t2 +
+                  0.09678418*t3 - 0.18628806*t4 + 0.27886807*t5 - 1.13520398*t6 +
+                  1.48851587*t7 - 0.82215223*t8 + 0.17087277*t9);
+        if (x >= 0.0) { return 1.0 - tau; }
+        return tau - 1.0;
+      }
+      function cumulative_normal(x, mean, deviation) {
+        return 0.5 * (1.0 + erf((x - mean) / (deviation * Math.SQRT2)));
+      }
+    </script>
   </body>
 </html>
