@@ -11,13 +11,42 @@
       body {
         background-image: linear-gradient(to right, gold, orange);
       }
-      h2 {
+      h1 {
         font-style: italic;
         color: gold;
         text-shadow: 1px 1px 4px black;
+        font-size: x-large;
+      }
+      #content {
+        text-align: center;
+      }
+      #display {
+        display: inline-block;
+        width: 200px;
+        height: 80px;
+        padding-top: 4px;
+        background: red;
+        box-shadow: 4px 4px;
+        text-align: center;
+        transform: skew(-10deg);
+        margin-bottom: 15px;
+      }
+      #display div {
+        transform: skew(10deg);
       }
       #display-ipf {
-        font-size: x-large;
+        font-size: 45px;
+        text-shadow: 1px 1px 2px gold;
+      }
+      #display-wilks {
+        margin-left: 12px;
+      }
+      input[type="number"] {
+        width: 150px;
+        margin: 4px;
+      }
+      p {
+        font-size: small;
       }
     </style>
 
@@ -25,15 +54,27 @@
   </head>
   <body>
     <header>
-      <h2>IPF Points Calculator</h2>
-      <p>
-        This is <a href="https://gitlab.com/openpowerlifting/ipf-points-calculator">Free and Open Source Software</a> from your friends at <a href="https://www.openpowerlifting.org">OpenPowerlifting</a>.
-      </p>
+      <h1>IPF Points Calculator</h1>
     </header>
-    <div>
+    <div id="content">
+      <div id="display">
+        <div id="display-ipf"></div>
+        <div id="display-wilks"></div>
+      </div>
+
       <div>
+      <label for="bodyweight">Bodyweight</label>
+      <input type="number" id="bodyweight" name="bodyweight" min="0" step="0.1" oninput="calc()">
+      </div>
+
+      <div>
+      <label for="total">Total</label>
+      <input type="number" id="total" name="total" min="0" step="2.5" oninput="calc()">
+      </div>
+      <div>
+
       <input type="radio" id="kilograms" name="units" value="kg" onchange="calc()" checked>
-      <label for="kilograms">Kilograms</label>
+      <label for="kilograms">Kilos</label>
       <input type="radio" id="pounds" name="units" value="lbs" onchange="calc()">
       <label for="pounds">Pounds</label>
       </div>
@@ -54,36 +95,22 @@
 
       <div>
       <input type="radio" id="sbd" name="event" value="SBD" onchange="calc()" checked>
-      <label for="sbd">Full Power</label>
+      <label for="sbd">SBD</label>
       <input type="radio" id="s" name="event" value="S" onchange="calc()">
-      <label for="s">Squat only</label>
+      <label for="s">Squat</label>
       <input type="radio" id="b" name="event" value="B" onchange="calc()">
-      <label for="b">Bench only</label>
+      <label for="b">Bench</label>
       <input type="radio" id="d" name="event" value="D" onchange="calc()">
-      <label for="d">Deadlift only</label>
+      <label for="d">DL</label>
       </div>
 
-      <div>
-      <input type="number" id="bodyweight" name="bodyweight" min="0" step="0.1" oninput="calc()">
-      <label for="bodyweight">Bodyweight</label>
-      </div>
-
-      <div>
-      <input type="number" id="total" name="total" min="0" step="2.5" oninput="calc()">
-      <label for="total">Weight Lifted</label>
-      </div>
-
+      <div style="margin-top: 10px;">
       <input type="button" value="Calculate" onclick="calc()">
+      </div>
 
-      <div id="display-ipf"></div>
-      <div id="display-wilks"></div>
-
-      <p>
-        This webapp is not affiliated with <a href="https://www.powerlifting.sport/">the IPF</a>.
-      </p>
-      <p>
-        Want to support more powerlifting software? <a href="https://www.patreon.com/openpowerlifting">Donate to the cause!</a>
-      </p>
+      <p>From your friends at <a href="https://www.openpowerlifting.org">OpenPowerlifting</a>.</p>
+      <p>This webapp is not affiliated with <a href="https://www.powerlifting.sport/">the IPF</a>.</p>
+      <p>Want to support more powerlifting software? <a href="https://www.patreon.com/openpowerlifting">Donate to the cause!</a></p>
     </div>
 
     <script>
@@ -176,7 +203,7 @@
           points = 0.0;
         }
 
-        document.getElementById("display-ipf").innerHTML = points.toFixed(2) + " IPF Points";
+        document.getElementById("display-ipf").innerHTML = points.toFixed(2);
         document.getElementById("display-wilks").innerHTML = wilks.toFixed(2) + " Wilks";
       }
       document.addEventListener("DOMContentLoaded", function(e){calc()});
