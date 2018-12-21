@@ -16,6 +16,9 @@
         color: gold;
         text-shadow: 1px 1px 4px black;
       }
+      #display-ipf {
+        font-size: x-large;
+      }
     </style>
 
     <title>IPF Points Calculator, from your friends at OpenPowerlifting</title>
@@ -26,29 +29,30 @@
       <p>
         This is <a href="https://gitlab.com/openpowerlifting/ipf-points-calculator">Free and Open Source Software</a> from your friends at <a href="https://www.openpowerlifting.org">OpenPowerlifting</a>.
       </p>
-      <p>
-        This webapp is not affiliated with <a href="https://www.powerlifting.sport/">the IPF</a>.
-      </p>
-      <p>
-        Want to support more powerlifting software? <a href="https://www.patreon.com/openpowerlifting">Donate to the cause!</a>
-      </p>
     </header>
     <div>
+      <div>
       <input type="radio" id="kilograms" name="units" value="kg" onchange="calc()" checked>
       <label for="kilograms">Kilograms</label>
       <input type="radio" id="pounds" name="units" value="lbs" onchange="calc()">
       <label for="pounds">Pounds</label>
+      </div>
 
+      <div>
       <input type="radio" id="men" name="sex" value="M" onchange="calc()" checked>
       <label for="men">Men</label>
       <input type="radio" id="women" name="sex" value="F" onchange="calc()">
       <label for="women">Women</label>
+      </div>
 
+      <div>
       <input type="radio" id="raw" name="equipment" value="Raw" onchange="calc()" checked>
       <label for="raw">Raw</label>
       <input type="radio" id="single" name="equipment" value="Single-ply" onchange="calc()">
       <label for="single">Single-ply</label>
+      </div>
 
+      <div>
       <input type="radio" id="sbd" name="event" value="SBD" onchange="calc()" checked>
       <label for="sbd">Full Power</label>
       <input type="radio" id="s" name="event" value="S" onchange="calc()">
@@ -57,17 +61,29 @@
       <label for="b">Bench only</label>
       <input type="radio" id="d" name="event" value="D" onchange="calc()">
       <label for="d">Deadlift only</label>
+      </div>
 
+      <div>
       <input type="number" id="bodyweight" name="bodyweight" min="0" step="0.1" oninput="calc()">
       <label for="bodyweight">Bodyweight</label>
+      </div>
 
-      <input type="number" id="total" name="total" min="0" step="0.1" oninput="calc()">
+      <div>
+      <input type="number" id="total" name="total" min="0" step="2.5" oninput="calc()">
       <label for="total">Weight Lifted</label>
+      </div>
 
       <input type="button" value="Calculate" onclick="calc()">
 
       <div id="display-ipf"></div>
       <div id="display-wilks"></div>
+
+      <p>
+        This webapp is not affiliated with <a href="https://www.powerlifting.sport/">the IPF</a>.
+      </p>
+      <p>
+        Want to support more powerlifting software? <a href="https://www.patreon.com/openpowerlifting">Donate to the cause!</a>
+      </p>
     </div>
 
     <script>
@@ -155,11 +171,12 @@
         var mean = params[0] * Math.log(bw) - params[1];
         var dev = params[2] * Math.log(bw) - params[3];
 
-        var points = cumulative_normal(total, mean, dev);
+        var points = cumulative_normal(total, mean, dev) * 1000.0;
 
-        document.getElementById("display-ipf").innerHTML = points.toFixed(6) + " IPF Points";
+        document.getElementById("display-ipf").innerHTML = points.toFixed(2) + " IPF Points";
         document.getElementById("display-wilks").innerHTML = wilks.toFixed(2) + " Wilks";
       }
+      document.addEventListener("DOMContentLoaded", function(e){calc()});
     </script>
   </body>
 </html>
