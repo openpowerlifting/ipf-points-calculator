@@ -66,11 +66,23 @@
 
       <input type="button" value="Calculate" onclick="calc()">
 
-      <div id="display">
-      </div>
+      <div id="display-ipf"></div>
+      <div id="display-wilks"></div>
     </div>
 
     <script>
+      function wilks_poly(a,b,c,d,e,f,x) {
+        var x2=x*x,x3=x2*x,x4=x3*x,x5=x4*x;
+        return 500.0 / (a+b*x+c*x2+d*x3+e*x4+f*x5);
+      }
+      function wilks_men(bw) {
+        bw = Math.min(Math.max(bw, 40.0), 201.9);
+        return wilks_poly(-216.0475144,16.2606339,-0.002388645,-0.00113732,7.01863E-06,-1.291E-08,bw);
+      }
+      function wilks_women(bw) {
+        bw = Math.min(Math.max(bw, 26.51), 154.53);
+        return wilks_poly(594.31747775582,-27.23842536447,0.82112226871,-0.00930733913,0.00004731582,-0.00000009054,bw);
+      }
       // https://en.wikipedia.org/wiki/Error_function#Polynomial
       // Agrees with the Rust implementation to about 6 decimal places.
       function erf(x) {
@@ -137,13 +149,16 @@
           total = total / 2.20462262;
         }
 
-        var params = PARAMETERS[sex][equipment][event]
+        var wilks = total * ((sex === "M") ? wilks_men(bw) : wilks_women(bw));
+
+        var params = PARAMETERS[sex][equipment][event];
         var mean = params[0] * Math.log(bw) - params[1];
         var dev = params[2] * Math.log(bw) - params[3];
 
         var points = cumulative_normal(total, mean, dev);
 
-        document.getElementById("display").innerHTML = String(points);
+        document.getElementById("display-ipf").innerHTML = points.toFixed(6) + " IPF Points";
+        document.getElementById("display-wilks").innerHTML = wilks.toFixed(2) + " Wilks";
       }
     </script>
   </body>
