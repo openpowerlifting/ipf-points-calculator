@@ -172,6 +172,9 @@
         var dev = params[2] * Math.log(bw) - params[3];
 
         var points = cumulative_normal(total, mean, dev) * 1000.0;
+        if (isNaN(points)) {
+          points = 0.0;
+        }
 
         document.getElementById("display-ipf").innerHTML = points.toFixed(2) + " IPF Points";
         document.getElementById("display-wilks").innerHTML = wilks.toFixed(2) + " Wilks";
