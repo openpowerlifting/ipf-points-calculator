@@ -229,22 +229,11 @@
         <div class="radio-group last">
           <div class="radio-field">
             <input type="radio" id="sbd" name="event" value="SBD" onchange="calc()" checked>
-            <label for="sbd" class="label-radio">SBD</label>
+            <label for="sbd" class="label-radio">3-Lift</label>
           </div>
-          <div class="radio-field">
-            <input type="radio" id="s" name="event" value="S" onchange="calc()">
-            <label for="s" class="label-radio">Squat</label>
-          </div>
-        </div>
-
-        <div class="radio-group last">
           <div class="radio-field">
             <input type="radio" id="b" name="event" value="B" onchange="calc()">
             <label for="b" class="label-radio">Bench</label>
-          </div>
-          <div class="radio-field">
-            <input type="radio" id="d" name="event" value="D" onchange="calc()">
-            <label for="d" class="label-radio">Deadlift</label>
           </div>
         </div>
 
@@ -274,48 +263,26 @@
         bw = Math.min(Math.max(bw, 26.51), 154.53);
         return wilks_poly(594.31747775582,-27.23842536447,0.82112226871,-0.00930733913,0.00004731582,-0.00000009054,bw);
       }
-      // https://en.wikipedia.org/wiki/Error_function#Polynomial
-      // Agrees with the Rust implementation to about 6 decimal places.
-      function erf(x) {
-        var t = 1.0/(1.0+Math.abs(x)/2.0);
-        var t2=t*t,t3=t2*t,t4=t3*t,t5=t4*t,t6=t5*t,t7=t6*t,t8=t7*t,t9=t8*t;
-        var tau = t * Math.exp(-x*x - 1.26551223 + 1.00002368*t + 0.37409196*t2 +
-                  0.09678418*t3 - 0.18628806*t4 + 0.27886807*t5 - 1.13520398*t6 +
-                  1.48851587*t7 - 0.82215223*t8 + 0.17087277*t9);
-        if (x >= 0.0) { return 1.0 - tau; }
-        return tau - 1.0;
-      }
-      function cumulative_normal(x, mean, deviation) {
-        return 0.5 * (1.0 + erf((x - mean) / (deviation * Math.SQRT2)));
-      }
 
       var PARAMETERS = {
         "M": {
           "Raw": {
-            "SBD": [310.67, 857.785, 53.21602246, 147.0835213],
-            "S": [123.1, 363.085, 25.16669173, 75.43114253],
-            "B": [86.4745, 259.155, 17.57845791, 53.12202336],
-            "D": [103.5355, 244.765, 15.3713591, 31.50223091]
+            "SBD": [310.67, 857.785, 53.216, 147.0835],
+            "B": [86.4745, 259.155, 17.57845, 53.122],
           },
           "Single-ply": {
-            "SBD": [387.265, 1121.28, 80.63242593, 222.4895974],
-            "S": [150.485, 446.445, 36.51551612, 103.7060711],
-            "B": [133.94, 441.465, 35.39379355, 113.0057151],
-            "D": [110.135, 263.66, 14.99598937, 23.01097909]
+            "SBD": [387.265, 1121.28, 80.6324, 222.4896],
+            "B": [133.94, 441.465, 35.3938, 113.0057],
           }
         },
         "F": {
           "Raw": {
-            "SBD": [125.1435, 228.03, 34.52461523, 86.83009976],
-            "S": [50.479, 105.632, 19.18458916, 56.22148694],
-            "B": [25.0485, 43.848, 6.717175515, 13.95197273],
-            "D": [47.136, 67.349, 9.155512107, 13.66997543],
+            "SBD": [125.1435, 228.03, 34.5246, 86.8301],
+            "B": [25.0485, 43.848, 6.7172, 13.952],
           },
           "Single-ply": {
-            "SBD": [176.58, 373.315, 48.45340151, 110.0102772],
-            "S": [74.6855, 171.585, 21.94753597, 52.2948313],
-            "B": [49.106, 124.209, 23.19897729, 67.4926054],
-            "D": [51.002, 69.8265, 8.58023763, 5.725798366]
+            "SBD": [176.58, 373.315, 48.4534, 110.0103],
+            "B": [49.106, 124.209, 23.199, 67.4926],
           }
         }
       };
@@ -346,9 +313,9 @@
         var mean = params[0] * Math.log(bw) - params[1];
         var dev = params[2] * Math.log(bw) - params[3];
 
-        var points = cumulative_normal(total, mean, dev) * 1000.0;
-        if (isNaN(points)) {
-          points = 0.0;
+        var points = 0.0;
+        if (total > 0) {
+          points = 500 + 100 * (total - mean) / dev;
         }
 
         document.getElementById("display-ipf").innerHTML = points.toFixed(2);
