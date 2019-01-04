@@ -313,9 +313,9 @@
         var mean = params[0] * Math.log(bw) - params[1];
         var dev = params[2] * Math.log(bw) - params[3];
 
-        var points = 0.0;
-        if (total > 0) {
-          points = 500 + 100 * (total - mean) / dev;
+        var points = 500 + 100 * (total - mean) / dev;
+        if (isNaN(points) || points < 0) {
+          points = 0;
         }
 
         document.getElementById("display-ipf").innerHTML = points.toFixed(2);
