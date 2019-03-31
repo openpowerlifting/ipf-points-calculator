@@ -335,7 +335,7 @@
         var dev = params[2] * Math.log(bw) - params[3];
 
         var points = 500 + 100 * (total - mean) / dev;
-        if (isNaN(points) || points < 0) {
+        if (isNaN(points) || points < 0 || bw < 40) {
           points = 0;
         }
 
