@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1">
-    <meta name="application-name" content="IPF Points Calculator">
-    <meta name="description" content="IPF Points Calculator, from your friends at OpenPowerlifting">
-    <meta name="keywords" content="IPF points,IPF score,IPF formula,IPF,USAPL,USAPL points,powerlifting,calculator,wilks">
+    <meta name="application-name" content="IPF GL Points Calculator">
+    <meta name="description" content="IPF GL Points Calculator, from your friends at OpenPowerlifting">
+    <meta name="keywords" content="Goodlift Calculator,Goodlift Points,IPF GL points,IPF GL score,IPF GL formula,IPF,USAPL,USAPL points,powerlifting,calculator,dots">
     <link rel="shortcut icon" type="image/png" href="favicon.png">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -169,17 +169,17 @@
       }
     </style>
 
-    <title>IPF Points Calculator</title>
+    <title>IPF GL Points Calculator</title>
   </head>
   <body>
     <div id="background">
       <div id="title">
-        <h1>OpenPowerlifting IPF Points Calculator</h1>
+        <h1>OpenPowerlifting IPF GL Points Calculator</h1>
       </div>
 
       <div id="points">
-        <h2 id="display-ipf"></h2>
-        <h3 id="display-wilks"></h3>
+        <h2 id="display-glp"></h2>
+        <h3 id="display-dots"></h3>
       </div>
     </div>
 
@@ -239,17 +239,6 @@
           </div>
         </div>
 
-        <div class="radio-group last">
-          <div class="radio-field">
-            <input type="radio" id="s" name="event" value="S" onchange="calc()">
-            <label for="s" class="label-radio">Squat</label>
-          </div>
-          <div class="radio-field">
-            <input type="radio" id="d" name="event" value="D" onchange="calc()">
-            <label for="d" class="label-radio">Deadlift</label>
-          </div>
-        </div>
-
         <input type="button" value="Calculate" id="calculate" onclick="calc()">
       </div>
     </div>
@@ -264,46 +253,38 @@
 
     <script>
       // @license magnet:?xt=urn:btih:0b31508aeb0634b347b8270c7bee4d411b5d4109&dn=agpl-3.0.txt AGPL-v3-or-Later
-      function wilks_poly(a,b,c,d,e,f,x) {
-        var x2=x*x,x3=x2*x,x4=x3*x,x5=x4*x;
-        return 500.0 / (a+b*x+c*x2+d*x3+e*x4+f*x5);
+      function dots_poly(a,b,c,d,e,x) {
+        var x2=x*x,x3=x2*x,x4=x3*x;
+        return 500.0 / (a*x4+b*x3+c*x2+d*x+e);
       }
-      function wilks_men(bw) {
-        bw = Math.min(Math.max(bw, 40.0), 201.9);
-        return wilks_poly(-216.0475144,16.2606339,-0.002388645,-0.00113732,7.01863E-06,-1.291E-08,bw);
+      function dots_men(bw) {
+        bw = Math.min(Math.max(bw, 40.0), 210.0);
+        return dots_poly(-0.0000010930,0.0007391293,-0.1918759221,24.0900756,-307.75076,bw);
       }
-      function wilks_women(bw) {
-        bw = Math.min(Math.max(bw, 26.51), 154.53);
-        return wilks_poly(594.31747775582,-27.23842536447,0.82112226871,-0.00930733913,0.00004731582,-0.00000009054,bw);
+      function dots_women(bw) {
+        bw = Math.min(Math.max(bw, 40.0), 150.0);
+        return dots_poly(-0.0000010706,0.0005158568,-0.1126655495,13.6175032,-57.96288,bw);
       }
 
       var PARAMETERS = {
         "M": {
           "Raw": {
-            "SBD": [310.67, 857.785, 53.216, 147.0835],
-            "S": [123.1000, 363.0850, 25.1667, 75.4311],
-            "B": [86.4745, 259.155, 17.57845, 53.122],
-            "D": [103.5355, 244.7650, 15.3714, 31.5022],
+            "SBD": [1199.72839, 1025.18162, 0.009210],
+            "B": [320.98041, 281.40258, 0.01008]
           },
           "Single-ply": {
-            "SBD": [387.265, 1121.28, 80.6324, 222.4896],
-            "S": [150.4850, 446.4450, 36.5155, 103.7061],
-            "B": [133.94, 441.465, 35.3938, 113.0057],
-            "D": [110.1350, 263.6600, 14.9960, 23.0110],
+            "SBD": [1236.25115, 1449.21864, 0.01644],
+            "B": [381.22073, 733.79378, 0.02398]
           }
         },
         "F": {
           "Raw": {
-            "SBD": [125.1435, 228.03, 34.5246, 86.8301],
-            "S": [50.4790, 105.6320, 19.1846, 56.2215],
-            "B": [25.0485, 43.848, 6.7172, 13.952],
-            "D": [47.1360, 67.3490, 9.1555, 13.6700],
+            "SBD": [610.32796, 1045.59282, 0.03048],
+            "B": [142.40398, 442.52671, 0.04724]
           },
           "Single-ply": {
-            "SBD": [176.58, 373.315, 48.4534, 110.0103],
-            "S": [74.6855, 171.5850, 21.9475, 52.2948],
-            "B": [49.106, 124.209, 23.199, 67.4926],
-            "D": [51.0020, 69.8265, 8.5802, 5.7258],
+            "SBD": [758.63878, 949.31382, 0.02435],
+            "B": [221.82209, 357.00377, 0.02937]
           }
         }
       };
@@ -328,19 +309,17 @@
           total = total / 2.20462262;
         }
 
-        var wilks = total * ((sex === "M") ? wilks_men(bw) : wilks_women(bw));
+        var dots = total * ((sex === "M") ? dots_men(bw) : dots_women(bw));
 
         var params = PARAMETERS[sex][equipment][event];
-        var mean = params[0] * Math.log(bw) - params[1];
-        var dev = params[2] * Math.log(bw) - params[3];
-
-        var points = 500 + 100 * (total - mean) / dev;
-        if (isNaN(points) || points < 0 || bw < 40) {
-          points = 0;
+        var denom = params[0] - (params[1] * Math.exp(-1.0 * params[2] * bw))
+        var glp = (denom === 0) ? 0 : Math.max(0, total * 100.0 / denom)
+        if (isNaN(glp) || bw < 35) {
+          glp = 0;
         }
 
-        document.getElementById("display-ipf").innerHTML = points.toFixed(2);
-        document.getElementById("display-wilks").innerHTML = wilks.toFixed(2) + " Wilks";
+        document.getElementById("display-glp").innerHTML = glp.toFixed(2);
+        document.getElementById("display-dots").innerHTML = dots.toFixed(2) + " Dots";
       }
       document.addEventListener("DOMContentLoaded", function(e){calc()});
       // @license-end
